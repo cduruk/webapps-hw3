@@ -144,42 +144,43 @@ public class Bookmark extends HttpServlet {
 
 	private void manageList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, DAOException {
 		// Look at the what parameter to see what we're doing to the list
-		String what = request.getParameter("what");
+		String what = request.getParameter("action");
 
 		if (what == null) {
 			// No change to list requested
-			outputToDoList(response);
+			outputToDoList(response, request);
 			return;
 		}
 
-		if (what.equals("Add to Top")) {
+		if (what.equals("Add")) {
 			processAdd(request,response,true);
 			return;
 		}
 
-		if (what.equals("Add to Bottom")) {
-			processAdd(request,response,false);
-			return;
-		}
-
-		outputToDoList(response,"No such operation: "+what);
+		outputToDoList(response, request, "No such operation: "+what);
 	}
 
 	private void processAdd(HttpServletRequest request, HttpServletResponse response, boolean addToTop) throws ServletException, IOException, DAOException {
 		List<String> errors = new ArrayList<String>();
-
+		UserBean user = (UserBean)request.getSession().getAttribute("user");
+		int userID = user.getId();
 		try {
 			BookmarkForm form = bookmarkFormFactory.create(request);
 			errors.addAll(form.getValidationErrors());
 			if (errors.size() > 0) {
-				outputToDoList(response,errors);
+				outputToDoList(response,request, errors);
 				return;
 			}
+			
+			BookmarkDAO.create(form.getUrl(), form.getComment(), userID);
 
-			outputToDoList(response,"Item Added");
+			outputToDoList(response,request,"Item Added");
+		} catch (DAOException e) {
+			errors.add(e.getMessage());
+			outputToDoList(response, request, errors);
 		} catch (FormBeanException e) {
 			errors.add(e.getMessage());
-			outputToDoList(response,errors);
+			outputToDoList(response, request, errors);
 		}
 	}
 
@@ -280,25 +281,26 @@ public class Bookmark extends HttpServlet {
 		}
 	}
 
-	private void outputToDoList(HttpServletResponse response) throws IOException {
+	private void outputToDoList(HttpServletResponse response, HttpServletRequest request) throws IOException {
 		// Just call the version that takes a List passing an empty List
 		List<String> list = new ArrayList<String>();
-		outputToDoList(response,list);
+		outputToDoList(response, request, list);
 	}
 
-	private void outputToDoList(HttpServletResponse response, String message) throws IOException {
+	private void outputToDoList(HttpServletResponse response, HttpServletRequest request, String message) throws IOException {
 		// Just put the message into a List and call the version that takes a List
 		List<String> list = new ArrayList<String>();
 		list.add(message);
-		outputToDoList(response,list);
+		outputToDoList(response, request, list);
 	}
 
-	private void outputToDoList(HttpServletResponse response, List<String> messages) throws IOException {
+	private void outputToDoList(HttpServletResponse response, HttpServletRequest request, List<String> messages) throws IOException {
+		UserBean user = (UserBean) request.getSession().getAttribute("user");
 
 		// Get the list of items to display at the end
 		BookmarkBean[] beans;
 		try {
-			beans = BookmarkDAO.getItemsForUser(1);
+			beans = BookmarkDAO.getItemsForUser(user.getId());
 			
 		} catch (DAOException e) {
 			// If there's an access error, add the message to our list of messages
