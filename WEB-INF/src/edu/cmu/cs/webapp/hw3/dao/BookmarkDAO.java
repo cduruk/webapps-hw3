@@ -52,6 +52,16 @@ public class BookmarkDAO {
 			throw new DAOException(e);
 		}
 	}
+	
+	public static void updateCount(int id) throws RollbackException{
+		Transaction.begin();
+
+		BookmarkBean bookmark = factory.lookup(id);
+		Integer current = bookmark.getClickCount();
+		bookmark.setClickCount(current+1);
+    	
+		Transaction.commit();
+	}
 
 	public static BookmarkBean[] getItems() throws DAOException {
 		try {

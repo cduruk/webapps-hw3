@@ -156,12 +156,6 @@ public class Bookmark extends HttpServlet {
 		// Look at the what parameter to see what we're doing to the list
 		String what = request.getParameter("action");
 
-		if (what == null) {
-			// No change to list requested
-			outputToDoList(response, request);
-			return;
-		}
-
 		if (what.equals("Add")) {
 			processAdd(request,response,true);
 			return;
@@ -172,6 +166,18 @@ public class Bookmark extends HttpServlet {
 			login(request, response);
 			return;
 		}
+		
+		if(request.getParameter("bean_id") != null){
+			Integer bean_id = Integer.parseInt(request.getParameter("bean_id"));
+			BookmarkDAO.updateCount(bean_id);
+		}
+		
+		if (what == null) {
+			outputToDoList(response, request);
+			return;
+		}
+		
+		
 
 		outputToDoList(response, request, "No such operation: "+what);
 	}
@@ -368,15 +374,23 @@ public class Bookmark extends HttpServlet {
 		for (int i=0; i<beans.length; i++) {
 			out.println("    <tr>");
 			out.println("        <td>");
-			out.println("            <form method=\"POST\">");
-			out.println("                <input type=\"hidden\" name=\"id\" value=\""+beans[i].getId()+"\" />");
+			out.println("    <tr>");
+			out.println("            <form name=\"bean"+beans[i].getId()+"\" method=\"POST\">");
+			out.println("    </tr>");
+			out.println("            <input type=\"hidden\" name=\"bean_id\" value=\""+beans[i].getId()+"\" />");
+			out.println("    <tr>");
+			out.println("      		  <td valign=\"top\" style=\"font-size: x-large\">"+"<a href=\"#\" onclick=\"document.bean"+beans[i].getId()+".submit();return false;\">"+beans[i].getUrl()+"</a></td>");        	
+			out.println("    </tr>");
+			out.println("    <tr>");			
+			out.println("        <td valign=\"top\" style=\"font-size: x-large\"> Comments: "+beans[i].getComment()+"</td>");
+			out.println("    </tr>");
+			out.println("    <tr>");			
+			out.println("        <td valign=\"top\" style=\"font-size: x-large\"> Click Counts: "+beans[i].getClickCount()+"</td>");
+			out.println("    </tr>");
 			out.println("            </form>");
 			out.println("        </td>");
-			out.println("        <td valign=\"top\" style=\"font-size: x-large\">&nbsp;"+(i+1)+".&nbsp;</td>");
-			out.println("        <td valign=\"top\" style=\"font-size: x-large\">"+beans[i].getUrl()+"</td>");        	
-			out.println("        <td valign=\"top\" style=\"font-size: x-large\">"+beans[i].getComment()+"</td>");
 
-			out.println("    </tr>");
+
 		}
 		out.println("</table>");
 
