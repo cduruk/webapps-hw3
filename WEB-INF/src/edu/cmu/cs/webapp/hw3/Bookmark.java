@@ -86,25 +86,20 @@ public class Bookmark extends HttpServlet {
 				return;
 			}
 
-			errors.addAll(form.getValidationErrors());
-			if (errors.size() != 0) {
-				outputLoginPage(response,form,errors, loggedIn, registered, registering, null, null);
-				return;
-			}
-
 			//FIXME
 			UserBean user = null;
 
 			if (form.getButton().equals("Register")) {
-				user = userDAO.lookup(form.getEmail());
-				if (user != null) {
-					errors.add("User already exists");
-					outputLoginPage(response,form,errors, false, false, false, null, null);
+				
+				errors.addAll(form.getRegisterErrors());
+				if (errors.size() != 0) {
+					outputLoginPage(response,form,errors, loggedIn, registered, registering, null, null);
 					return;
 				}
 				
-				if(form.getEmail().indexOf("@") <= 0 || form.getEmail().indexOf("@") == form.getEmail().length()-1){
-					errors.add("You must enter a valid email");
+				user = userDAO.lookup(form.getEmail());
+				if (user != null) {
+					errors.add("User already exists");
 					outputLoginPage(response,form,errors, false, false, false, null, null);
 					return;
 				}
@@ -116,6 +111,13 @@ public class Bookmark extends HttpServlet {
 			
 			else if(form.getButton().equals("Login")) {
 				user = userDAO.lookup(form.getEmail());
+
+				errors.addAll(form.getLoginErrors());
+				if (errors.size() != 0) {
+					outputLoginPage(response,form,errors, loggedIn, registered, registering, null, null);
+					return;
+				}
+				
 				if (user == null) {
 					errors.add("No such user");
 					outputLoginPage(response,form,errors, loggedIn, registered, registering, null, null);
@@ -130,8 +132,8 @@ public class Bookmark extends HttpServlet {
 			}
 			
 			else { //Complete
-				if(!form.getConfirm().equals(form.getSecret())){
-					errors.add("Two passwords do not match");
+				errors.addAll(form.getCompleteErrors());
+				if(errors.size() > 0){
 					outputLoginPage(response,form,errors, loggedIn, registered, true, null, form.getSecret());
 					return;
 				}

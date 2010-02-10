@@ -31,6 +31,42 @@ public class LoginForm extends FormBean{
 		
         return errors;
     }
+    
+    public List<String> getCompleteErrors(){
+    	List<String> errors = new ArrayList<String>();
+    	
+        if ((first == null || first.length() == 0)) errors.add("First Name is required");
+        if ((last == null || last.length() == 0)) errors.add("Last Name is required");
+
+    	
+    	if(!confirm.equals(secret)){
+    		errors.add("Two passwords do not match");
+    	}
+    	
+    	return errors;
+    }
+    
+    public List<String> getRegisterErrors(){
+    	List<String> errors = new ArrayList<String>();
+
+        if ((email == null || email.length() == 0)) errors.add("Email is required");
+        if ((password == null || password.length() == 0)) errors.add("Password is required");
+        
+		if(email.indexOf("@") <= 0 || email.indexOf("@") == email.length()-1){
+			errors.add("You must enter a valid email");
+		}
+    	
+    	return errors;
+    }
+    
+    public List<String> getLoginErrors(){
+    	List<String> errors = new ArrayList<String>();
+    	
+        if ((email == null || email.length() == 0)) errors.add("Email is required");
+        if ((password == null || password.length() == 0)) errors.add("Password is required");
+    	
+    	return errors;
+    }
 
 	public void setEmail(String email) {
 		this.email = email;
