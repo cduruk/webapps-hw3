@@ -102,7 +102,6 @@ public class Bookmark extends HttpServlet {
 					outputLoginPage(response,form,errors, false, false, false, null, null);
 					return;
 				}
-				
 
 				registering = true;
 				outputLoginPage(response, form, errors, loggedIn, registered, registering, form.getEmail(), form.getPassword());
@@ -156,6 +155,18 @@ public class Bookmark extends HttpServlet {
 		// Look at the what parameter to see what we're doing to the list
 		String what = request.getParameter("action");
 
+		if(request.getParameter("bean_id") != null){
+			Integer bean_id = Integer.parseInt(request.getParameter("bean_id"));
+			BookmarkDAO.updateCount(bean_id);
+			outputToDoList(response, request);
+			return;
+		}
+		
+		if (what == null) {
+			outputToDoList(response, request);
+			return;
+		}
+		
 		if (what.equals("Add")) {
 			processAdd(request,response,true);
 			return;
@@ -167,18 +178,6 @@ public class Bookmark extends HttpServlet {
 			return;
 		}
 		
-		if(request.getParameter("bean_id") != null){
-			Integer bean_id = Integer.parseInt(request.getParameter("bean_id"));
-			BookmarkDAO.updateCount(bean_id);
-		}
-		
-		if (what == null) {
-			outputToDoList(response, request);
-			return;
-		}
-		
-		
-
 		outputToDoList(response, request, "No such operation: "+what);
 	}
 
@@ -265,8 +264,6 @@ public class Bookmark extends HttpServlet {
 			//FIXME
 		}
 
-
-		
 		if(!registered && registering){
 			out.println("<form method=\"POST\">");
 			out.println("    <table/>");
@@ -330,7 +327,6 @@ public class Bookmark extends HttpServlet {
 			beans = new BookmarkBean[0];
 		}
 
-
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
 
@@ -387,10 +383,7 @@ public class Bookmark extends HttpServlet {
 			out.println("    <tr>");			
 			out.println("        <td valign=\"top\" style=\"font-size: x-large\"> Click Counts: "+beans[i].getClickCount()+"</td>");
 			out.println("    </tr>");
-			out.println("            </form>");
-			out.println("        </td>");
-
-
+			out.println("      		</form>");
 		}
 		out.println("</table>");
 
