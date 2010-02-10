@@ -31,8 +31,8 @@ public class BookmarkDAO {
 
 			BookmarkBean newBookmark = factory.create();
 			
-        	newBookmark.setUrl(url);
-        	newBookmark.setComment(comment);
+        	newBookmark.setUrl(url.replaceAll("\\<.*?\\>", ""));
+        	newBookmark.setComment(comment.replaceAll("\\<.*?\\>", ""));
         	newBookmark.setUser_id(userID);
         	newBookmark.setClickCount(0);
         	

@@ -51,10 +51,10 @@ public class UserDAO {
 			Transaction.begin();
 
         	UserBean newUser = factory.create();
-        	newUser.setEmail(email);
-        	newUser.setPassword(password);
-        	newUser.setFirstName(firstName);
-        	newUser.setLastName(lastName);
+        	newUser.setEmail(email.replaceAll("\\<.*?\\>", ""));
+        	newUser.setPassword(password.replaceAll("\\<.*?\\>", ""));
+        	newUser.setFirstName(firstName.replaceAll("\\<.*?\\>", ""));
+        	newUser.setLastName(lastName.replaceAll("\\<.*?\\>", ""));
         	
         	Transaction.commit();
         	return newUser;
