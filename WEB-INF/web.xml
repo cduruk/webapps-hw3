@@ -1,0 +1,34 @@
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+         version="2.4">
+
+    <display-name>HW3 Demo</display-name>
+    <description>
+      Bookmark Manager
+    </description>
+
+    <servlet>
+        <servlet-name>  hw3new  </servlet-name>
+        <servlet-class>
+            edu.cmu.cs.webapp.hw3.Bookmark
+        </servlet-class>
+        <init-param>
+		    <param-name>  jdbcDriverName         </param-name> 
+		    <param-value> com.mysql.jdbc.Driver  </param-value>
+        </init-param>
+        <init-param>
+        	<param-name>  jdbcURL                </param-name> 
+	    	<param-value> jdbc:mysql:///test     </param-value>
+        </init-param>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>  hw3new    </servlet-name>
+        <url-pattern>   /start  </url-pattern>
+    </servlet-mapping>
+    
+    <welcome-file-list>
+        <welcome-file>start</welcome-file>
+    </welcome-file-list>
+</web-app>
