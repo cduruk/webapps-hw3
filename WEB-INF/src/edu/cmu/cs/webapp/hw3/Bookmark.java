@@ -102,6 +102,12 @@ public class Bookmark extends HttpServlet {
 					outputLoginPage(response,form,errors, false, false, false, null, null);
 					return;
 				}
+				
+				if(form.getEmail().indexOf("@")<0){
+					errors.add("You must enter a valid email");
+					outputLoginPage(response,form,errors, false, false, false, null, null);
+					return;
+				}
 
 				registering = true;
 				outputLoginPage(response, form, errors, loggedIn, registered, registering, form.getEmail(), form.getPassword());
