@@ -12,6 +12,7 @@ public class LoginForm extends FormBean{
     private String password;
     private String secret;
     private String button;
+    private String confirm;
 	
     public String getPassword()  { return password; }
     public String getButton()    { return button; }
@@ -22,7 +23,7 @@ public class LoginForm extends FormBean{
     public List<String> getValidationErrors() {
         List<String> errors = new ArrayList<String>();
 
-        if (password == null || password.length() == 0) errors.add("Password is required");
+        if (secret == null && (password == null || password.length() == 0)) errors.add("Password is required");
         if (button == null) errors.add("Button is required");
         if (!button.equals("Login") && !button.equals("Register") && !button.equals("Complete")) errors.add("Invalid button");
         
@@ -54,5 +55,11 @@ public class LoginForm extends FormBean{
 	}
 	public String getFirst() {
 		return first;
+	}
+	public void setConfirm(String confirm) {
+		this.confirm = confirm;
+	}
+	public String getConfirm() {
+		return confirm;
 	}
 }

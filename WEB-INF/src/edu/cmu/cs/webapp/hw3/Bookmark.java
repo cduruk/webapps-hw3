@@ -130,9 +130,9 @@ public class Bookmark extends HttpServlet {
 			}
 			
 			else { //Complete
-				if(!form.getPassword().equals(form.getSecret())){
+				if(!form.getConfirm().equals(form.getSecret())){
 					errors.add("Two passwords do not match");
-					outputLoginPage(response,form,errors, loggedIn, registered, true, null, null);
+					outputLoginPage(response,form,errors, loggedIn, registered, true, null, form.getSecret());
 					return;
 				}
 				
@@ -293,7 +293,7 @@ public class Bookmark extends HttpServlet {
 			out.println("        </tr>");
 			out.println("        <tr>");
 			out.println("            <td style=\"font-size: x-large\">Confirm Password:</td>");
-			out.println("            <td><input type=\"password\" name=\"password\" /></td>");
+			out.println("            <td><input type=\"password\" name=\"confirm\" /></td>");
 			out.println("        </tr>");
 			out.println("        <tr>");
 			out.println("            <td colspan=\"2\" align=\"center\">");
@@ -301,7 +301,7 @@ public class Bookmark extends HttpServlet {
 			out.println("            </td>");
 			out.println("        </tr>");
 			out.println("        <tr>");
-			out.println("<td><input type=\"hidden\" name=\"email\" value=\""+email+"\"/></td>");
+			out.println("<td><input type=\"hidden\" name=\"email\" value=\""+form.getEmail()+"\"/></td>");
 			out.println("<td><input type=\"hidden\" name=\"secret\" value=\""+password+"\"/></td>");
 			out.println("        </tr>");
 			out.println("    </table>");
