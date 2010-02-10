@@ -38,10 +38,7 @@ public class UserDAO {
     }
     
     public boolean doesUserExist(String email) throws RollbackException{
-    
-        	
         	return factory.match(MatchArg.equals("email",email)).length != 0;
-        
     }
 
     public static UserBean create(String email, String password, String firstName, String lastName) throws DAOException {

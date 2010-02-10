@@ -70,17 +70,21 @@ public class Bookmark extends HttpServlet {
 		List<String> errors = new ArrayList<String>();
 		LoginForm form = null;
 
+		
+		boolean loggedIn = false;
+		boolean registered = false;
+		
 		try {
 			form = loginFormFactory.create(request);
-
+			
 			if (!form.isPresent()) {
-				outputLoginPage(response,form,null);
+				outputLoginPage(response,form,null, loggedIn, registered);
 				return;
 			}
 
 			errors.addAll(form.getValidationErrors());
 			if (errors.size() != 0) {
-				outputLoginPage(response,form,errors);
+				outputLoginPage(response,form,errors, loggedIn, registered);
 				return;
 			}
 
@@ -92,27 +96,30 @@ public class Bookmark extends HttpServlet {
 				user = userDAO.lookup(form.getEmail());
 				if (user == null) {
 					errors.add("No such user");
-					outputLoginPage(response,form,errors);
+					outputLoginPage(response,form,errors, loggedIn, registered);
 					return;
 				}
 
 				if (!form.getPassword().equals(user.getPassword())) {
 					errors.add("Incorrect password");
-					outputLoginPage(response,form,errors);
+					outputLoginPage(response,form,errors, loggedIn, registered);
 					return;
 				}
 			}
 
 			HttpSession session = request.getSession();
 			session.setAttribute("user",user);
+			//TODO
+			loggedIn = true;
+			
 			System.out.println("ToDoList: login: user="+user.getEmail());
 			manageList(request,response);
 		} catch (DAOException e) {
 			errors.add(e.getMessage());
-			outputLoginPage(response,form,errors);
+			outputLoginPage(response,form,errors, loggedIn, registered);
 		} catch (FormBeanException e) {
 			errors.add(e.getMessage());
-			outputLoginPage(response,form,errors);
+			outputLoginPage(response,form,errors, loggedIn, registered);
 		}
 	}
 
@@ -168,7 +175,7 @@ public class Bookmark extends HttpServlet {
 		out.println("  </head>");
 	}
 
-	private void outputLoginPage(HttpServletResponse response, LoginForm form, List<String> errors) throws IOException {
+	private void outputLoginPage(HttpServletResponse response, LoginForm form, List<String> errors, boolean loggedIn, boolean registered) throws IOException {
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
 
@@ -186,31 +193,65 @@ public class Bookmark extends HttpServlet {
 				out.println("</p>");
 			}
 		}
+		
+		if(!loggedIn){
+			// Generate an HTML <form> to get data from the user
+			out.println("<form method=\"POST\">");
+			out.println("    <table/>");
+			out.println("        <tr>");
+			out.println("            <td style=\"font-size: x-large\">Email:</td>");
+			out.println("            <td>");
+			out.println("                <input type=\"text\" name=\"email\"");
+			out.println("                />");
+			out.println("            <td>");
+			out.println("        </tr>");
+			out.println("        <tr>");
+			out.println("            <td style=\"font-size: x-large\">Password:</td>");
+			out.println("            <td><input type=\"password\" name=\"password\" /></td>");
+			out.println("        </tr>");
+			out.println("        <tr>");
+			out.println("            <td colspan=\"2\" align=\"center\">");
+			out.println("                <input type=\"submit\" name=\"button\" value=\"Login\" />");
+			out.println("                <input type=\"submit\" name=\"button\" value=\"Register\" />");
+			out.println("            </td>");
+			out.println("        </tr>");
+			out.println("    </table>");
+			out.println("</form>");
+			out.println("</body>");
+			out.println("</html>");
+		}
 
-		// Generate an HTML <form> to get data from the user
-		out.println("<form method=\"POST\">");
-		out.println("    <table/>");
-		out.println("        <tr>");
-		out.println("            <td style=\"font-size: x-large\">Email:</td>");
-		out.println("            <td>");
-		out.println("                <input type=\"text\" name=\"email\"");
-		out.println("                />");
-		out.println("            <td>");
-		out.println("        </tr>");
-		out.println("        <tr>");
-		out.println("            <td style=\"font-size: x-large\">Password:</td>");
-		out.println("            <td><input type=\"password\" name=\"password\" /></td>");
-		out.println("        </tr>");
-		out.println("        <tr>");
-		out.println("            <td colspan=\"2\" align=\"center\">");
-		out.println("                <input type=\"submit\" name=\"button\" value=\"Login\" />");
-		out.println("                <input type=\"submit\" name=\"button\" value=\"Register\" />");
-		out.println("            </td>");
-		out.println("        </tr>");
-		out.println("    </table>");
-		out.println("</form>");
-		out.println("</body>");
-		out.println("</html>");
+
+		
+		if(!registered){
+			out.println("<form method=\"POST\">");
+			out.println("    <table/>");
+			out.println("        <tr>");
+			out.println("            <td style=\"font-size: x-large\">First Name:</td>");
+			out.println("            <td>");
+			out.println("                <input type=\"text\" name=\"first\"");
+			out.println("                />");
+			out.println("            <td>");
+			out.println("        </tr>");
+			out.println("        <tr>");
+			out.println("            <td style=\"font-size: x-large\">Last Name:</td>");
+			out.println("            <td><input type=\"password\" name=\"last\" /></td>");
+			out.println("        </tr>");
+			out.println("        <tr>");
+			out.println("            <td style=\"font-size: x-large\">Confirm Password:</td>");
+			out.println("            <td><input type=\"password\" name=\"confirm\" /></td>");
+			out.println("        </tr>");
+			out.println("        <tr>");
+			out.println("            <td colspan=\"2\" align=\"center\">");
+			out.println("                <input type=\"submit\" name=\"button\" value=\"Login\" />");
+			out.println("                <input type=\"submit\" name=\"button\" value=\"Register\" />");
+			out.println("            </td>");
+			out.println("        </tr>");
+			out.println("    </table>");
+			out.println("</form>");
+			out.println("</body>");
+			out.println("</html>");
+		}
 	}
 
 	private void outputToDoList(HttpServletResponse response) throws IOException {

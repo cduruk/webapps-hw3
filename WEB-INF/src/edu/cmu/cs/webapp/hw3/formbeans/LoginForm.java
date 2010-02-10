@@ -7,8 +7,8 @@ import org.mybeans.form.FormBean;
 
 public class LoginForm extends FormBean{
     private String email;
-    private String firstName;
-    private String lastName;
+    private String first;
+    private String last;
     private String password;
     private String secret;
     private String button;
@@ -31,12 +31,7 @@ public class LoginForm extends FormBean{
 		
         return errors;
     }
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-	public String getLastName() {
-		return lastName;
-	}
+
 	public void setEmail(String email) {
 		this.email = email;
 	}
@@ -49,10 +44,16 @@ public class LoginForm extends FormBean{
 	public String getSecret() {
 		return secret;
 	}
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
+	public void setLast(String last) {
+		this.last = last;
 	}
-	public String getFirstName() {
-		return firstName;
+	public String getLast() {
+		return last;
+	}
+	public void setFirst(String first) {
+		this.first = first;
+	}
+	public String getFirst() {
+		return first;
 	}
 }
