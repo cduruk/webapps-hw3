@@ -58,6 +58,9 @@ public class Bookmark extends HttpServlet {
 				manageList(request,response);
 			} catch (DAOException e) {
 				e.printStackTrace();
+			} catch (RollbackException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}
@@ -99,6 +102,7 @@ public class Bookmark extends HttpServlet {
 					outputLoginPage(response,form,errors, false, false, false, null, null);
 					return;
 				}
+				
 
 				registering = true;
 				outputLoginPage(response, form, errors, loggedIn, registered, registering, form.getEmail(), form.getPassword());
@@ -121,6 +125,12 @@ public class Bookmark extends HttpServlet {
 			}
 			
 			else { //Complete
+				if(!form.getPassword().equals(form.getSecret())){
+					errors.add("Two passwords do not match");
+					outputLoginPage(response,form,errors, loggedIn, registered, true, null, null);
+					return;
+				}
+				
 				UserDAO.create(form.getEmail(), form.getSecret(), form.getFirst(), form.getLast());
 				user = userDAO.lookup(form.getEmail());
 				loggedIn = true;
@@ -142,7 +152,7 @@ public class Bookmark extends HttpServlet {
 		}
 	}
 
-	private void manageList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, DAOException {
+	private void manageList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, DAOException, RollbackException {
 		// Look at the what parameter to see what we're doing to the list
 		String what = request.getParameter("action");
 
@@ -154,6 +164,12 @@ public class Bookmark extends HttpServlet {
 
 		if (what.equals("Add")) {
 			processAdd(request,response,true);
+			return;
+		}
+		
+		if (what.equals("Logout")) {
+			request.getSession().setAttribute("user", null);
+			login(request, response);
 			return;
 		}
 
@@ -335,6 +351,7 @@ public class Bookmark extends HttpServlet {
 		out.println("        <tr>");
 		out.println("            <td/>");
 		out.println("            <td><input type=\"submit\" name=\"action\" value=\"Add\"/></td>");
+		out.println("            <td><input type=\"submit\" name=\"action\" value=\"Logout\"/></td>");
 		out.println("        </tr>");
 		out.println("        <tr><td colspan=\"3\"><hr/></td></tr>");
 		out.println("    </table>");
