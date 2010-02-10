@@ -73,53 +73,60 @@ public class Bookmark extends HttpServlet {
 		
 		boolean loggedIn = false;
 		boolean registered = false;
+		boolean registering = false;
 		
 		try {
 			form = loginFormFactory.create(request);
 			
 			if (!form.isPresent()) {
-				outputLoginPage(response,form,null, loggedIn, registered);
+				outputLoginPage(response,form,null, loggedIn, registered, registering);
 				return;
 			}
 
 			errors.addAll(form.getValidationErrors());
 			if (errors.size() != 0) {
-				outputLoginPage(response,form,errors, loggedIn, registered);
+				outputLoginPage(response,form,errors, loggedIn, registered, registering);
 				return;
 			}
 
-			UserBean user;
+			//FIXME
+			UserBean user = null;
 
 			if (form.getButton().equals("Register")) {
-				user = userDAO.create(form.getEmail(), form.getPassword());
+				//FIXME
+//				user = userDAO.create(form.getEmail(), form.getPassword());
+				registering = true;
+				outputLoginPage(response, form, errors, loggedIn, registered, registering);
+				return; //FIXME
+				
 			} else {
 				user = userDAO.lookup(form.getEmail());
 				if (user == null) {
 					errors.add("No such user");
-					outputLoginPage(response,form,errors, loggedIn, registered);
+					outputLoginPage(response,form,errors, loggedIn, registered, registering);
 					return;
 				}
 
 				if (!form.getPassword().equals(user.getPassword())) {
 					errors.add("Incorrect password");
-					outputLoginPage(response,form,errors, loggedIn, registered);
+					outputLoginPage(response,form,errors, loggedIn, registered, registering);
 					return;
 				}
 			}
 
 			HttpSession session = request.getSession();
 			session.setAttribute("user",user);
-			//TODO
+			
+			//FIXME
 			loggedIn = true;
 			
-			System.out.println("ToDoList: login: user="+user.getEmail());
 			manageList(request,response);
 		} catch (DAOException e) {
 			errors.add(e.getMessage());
-			outputLoginPage(response,form,errors, loggedIn, registered);
+			outputLoginPage(response,form,errors, loggedIn, registered, registering);
 		} catch (FormBeanException e) {
 			errors.add(e.getMessage());
-			outputLoginPage(response,form,errors, loggedIn, registered);
+			outputLoginPage(response,form,errors, loggedIn, registered, registering);
 		}
 	}
 
@@ -175,7 +182,7 @@ public class Bookmark extends HttpServlet {
 		out.println("  </head>");
 	}
 
-	private void outputLoginPage(HttpServletResponse response, LoginForm form, List<String> errors, boolean loggedIn, boolean registered) throws IOException {
+	private void outputLoginPage(HttpServletResponse response, LoginForm form, List<String> errors, boolean loggedIn, boolean registered, boolean registering) throws IOException {
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
 
@@ -194,7 +201,7 @@ public class Bookmark extends HttpServlet {
 			}
 		}
 		
-		if(!loggedIn){
+		if(!loggedIn && !registering){
 			// Generate an HTML <form> to get data from the user
 			out.println("<form method=\"POST\">");
 			out.println("    <table/>");
@@ -219,11 +226,13 @@ public class Bookmark extends HttpServlet {
 			out.println("</form>");
 			out.println("</body>");
 			out.println("</html>");
+			return;
+			//FIXME
 		}
 
 
 		
-		if(!registered){
+		if(!registered && registering){
 			out.println("<form method=\"POST\">");
 			out.println("    <table/>");
 			out.println("        <tr>");
@@ -243,14 +252,15 @@ public class Bookmark extends HttpServlet {
 			out.println("        </tr>");
 			out.println("        <tr>");
 			out.println("            <td colspan=\"2\" align=\"center\">");
-			out.println("                <input type=\"submit\" name=\"button\" value=\"Login\" />");
-			out.println("                <input type=\"submit\" name=\"button\" value=\"Register\" />");
+			out.println("                <input type=\"submit\" name=\"button\" value=\"Complete\" />");
 			out.println("            </td>");
 			out.println("        </tr>");
 			out.println("    </table>");
 			out.println("</form>");
 			out.println("</body>");
 			out.println("</html>");
+			return;
+			//FIXME
 		}
 	}
 
