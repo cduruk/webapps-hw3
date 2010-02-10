@@ -103,7 +103,7 @@ public class Bookmark extends HttpServlet {
 					return;
 				}
 				
-				if(form.getEmail().indexOf("@")<0){
+				if(form.getEmail().indexOf("@") <= 0 || form.getEmail().indexOf("@") == form.getEmail().length()-1){
 					errors.add("You must enter a valid email");
 					outputLoginPage(response,form,errors, false, false, false, null, null);
 					return;
