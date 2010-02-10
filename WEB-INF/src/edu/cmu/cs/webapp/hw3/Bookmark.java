@@ -75,17 +75,17 @@ public class Bookmark extends HttpServlet {
 		boolean registered = false;
 		boolean registering = false;
 		
-		try {
+		try {			
 			form = loginFormFactory.create(request);
 			
 			if (!form.isPresent()) {
-				outputLoginPage(response,form,null, loggedIn, registered, registering);
+				outputLoginPage(response,form, null, loggedIn, registered, registering, null, null);
 				return;
 			}
 
 			errors.addAll(form.getValidationErrors());
 			if (errors.size() != 0) {
-				outputLoginPage(response,form,errors, loggedIn, registered, registering);
+				outputLoginPage(response,form,errors, loggedIn, registered, registering, null, null);
 				return;
 			}
 
@@ -93,25 +93,37 @@ public class Bookmark extends HttpServlet {
 			UserBean user = null;
 
 			if (form.getButton().equals("Register")) {
-				//FIXME
-//				user = userDAO.create(form.getEmail(), form.getPassword());
+				user = userDAO.lookup(form.getEmail());
+				if (user != null) {
+					errors.add("User already exists");
+					outputLoginPage(response,form,errors, false, false, false, null, null);
+					return;
+				}
+
 				registering = true;
-				outputLoginPage(response, form, errors, loggedIn, registered, registering);
+				outputLoginPage(response, form, errors, loggedIn, registered, registering, form.getEmail(), form.getPassword());
 				return; //FIXME
-				
-			} else {
+			} 
+			
+			else if(form.getButton().equals("Login")) {
 				user = userDAO.lookup(form.getEmail());
 				if (user == null) {
 					errors.add("No such user");
-					outputLoginPage(response,form,errors, loggedIn, registered, registering);
+					outputLoginPage(response,form,errors, loggedIn, registered, registering, null, null);
 					return;
 				}
 
 				if (!form.getPassword().equals(user.getPassword())) {
 					errors.add("Incorrect password");
-					outputLoginPage(response,form,errors, loggedIn, registered, registering);
+					outputLoginPage(response,form,errors, loggedIn, registered, registering, null, null);
 					return;
-				}
+				}	
+			}
+			
+			else { //Complete
+				UserDAO.create(form.getEmail(), form.getSecret(), form.getFirst(), form.getLast());
+				user = userDAO.lookup(form.getEmail());
+				loggedIn = true;
 			}
 
 			HttpSession session = request.getSession();
@@ -123,10 +135,10 @@ public class Bookmark extends HttpServlet {
 			manageList(request,response);
 		} catch (DAOException e) {
 			errors.add(e.getMessage());
-			outputLoginPage(response,form,errors, loggedIn, registered, registering);
+			outputLoginPage(response,form,errors, loggedIn, registered, registering, null, null);
 		} catch (FormBeanException e) {
 			errors.add(e.getMessage());
-			outputLoginPage(response,form,errors, loggedIn, registered, registering);
+			outputLoginPage(response,form,errors, loggedIn, registered, registering, null, null);
 		}
 	}
 
@@ -182,7 +194,7 @@ public class Bookmark extends HttpServlet {
 		out.println("  </head>");
 	}
 
-	private void outputLoginPage(HttpServletResponse response, LoginForm form, List<String> errors, boolean loggedIn, boolean registered, boolean registering) throws IOException {
+	private void outputLoginPage(HttpServletResponse response, LoginForm form, List<String> errors, boolean loggedIn, boolean registered, boolean registering, String email, String password) throws IOException {
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
 
@@ -248,12 +260,16 @@ public class Bookmark extends HttpServlet {
 			out.println("        </tr>");
 			out.println("        <tr>");
 			out.println("            <td style=\"font-size: x-large\">Confirm Password:</td>");
-			out.println("            <td><input type=\"password\" name=\"confirm\" /></td>");
+			out.println("            <td><input type=\"password\" name=\"password\" /></td>");
 			out.println("        </tr>");
 			out.println("        <tr>");
 			out.println("            <td colspan=\"2\" align=\"center\">");
 			out.println("                <input type=\"submit\" name=\"button\" value=\"Complete\" />");
 			out.println("            </td>");
+			out.println("        </tr>");
+			out.println("        <tr>");
+			out.println("<td><input type=\"hidden\" name=\"email\" value=\""+email+"\"/></td>");
+			out.println("<td><input type=\"hidden\" name=\"secret\" value=\""+password+"\"/></td>");
 			out.println("        </tr>");
 			out.println("    </table>");
 			out.println("</form>");

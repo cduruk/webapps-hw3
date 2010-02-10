@@ -24,10 +24,9 @@ public class LoginForm extends FormBean{
 
         if (password == null || password.length() == 0) errors.add("Password is required");
         if (button == null) errors.add("Button is required");
-
+        if (!button.equals("Login") && !button.equals("Register") && !button.equals("Complete")) errors.add("Invalid button");
+        
         if (errors.size() > 0) return errors;
-
-        if (!button.equals("Login") && !button.equals("Register")) errors.add("Invalid button");
 		
         return errors;
     }
