@@ -78,6 +78,17 @@ public class UserDAO {
     	Transaction.commit();
     	return newUser;
 	}
+    
+    public UserBean create(String email, String password) throws RollbackException {
+    	Transaction.begin();
+    	UserBean newUser = factory.create();
+    	
+    	newUser.setEmail(email);
+    	newUser.setPassword(password);
+    	
+    	Transaction.commit();
+    	return newUser;
+	}
 
 	public UserBean lookup(String email) throws DAOException {
         try {

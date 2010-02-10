@@ -87,9 +87,7 @@ public class Bookmark extends HttpServlet {
 			UserBean user;
 
 			if (form.getButton().equals("Register")) {
-				user = userDAO.create(form.getEmail());
-				user.setPassword(form.getPassword());
-				userDAO.update(user);
+				user = userDAO.create(form.getEmail(), form.getPassword());
 			} else {
 				user = userDAO.lookup(form.getEmail());
 				if (user == null) {
@@ -193,9 +191,9 @@ public class Bookmark extends HttpServlet {
 		out.println("<form method=\"POST\">");
 		out.println("    <table/>");
 		out.println("        <tr>");
-		out.println("            <td style=\"font-size: x-large\">User Name:</td>");
+		out.println("            <td style=\"font-size: x-large\">Email:</td>");
 		out.println("            <td>");
-		out.println("                <input type=\"text\" name=\"userName\"");
+		out.println("                <input type=\"text\" name=\"email\"");
 		out.println("                />");
 		out.println("            <td>");
 		out.println("        </tr>");
