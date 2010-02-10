@@ -17,7 +17,7 @@ public class BookmarkDAO {
 	
 	public BookmarkDAO() throws DAOException {
 		try {
-			BeanTable<BookmarkBean> table = BeanTable.getInstance(BookmarkBean.class,"bookmark");
+			BeanTable<BookmarkBean> table = BeanTable.getInstance(BookmarkBean.class,"cduruk_bookmark");
 			if (!table.exists()) table.create("id");
 			factory = table.getFactory();
 		} catch (BeanFactoryException e) {

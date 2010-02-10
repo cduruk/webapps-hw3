@@ -27,7 +27,7 @@ public class UserDAO {
 
     public UserDAO() throws DAOException {
         try {
-            BeanTable<UserBean> table = BeanTable.getInstance(UserBean.class,"user");
+            BeanTable<UserBean> table = BeanTable.getInstance(UserBean.class,"cduruk_user");
             if (!table.exists()) {
                 table.create("id");  
                 }

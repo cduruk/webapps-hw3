@@ -246,11 +246,13 @@ public class Bookmark extends HttpServlet {
 			out.println("<form method=\"POST\">");
 			out.println("    <table/>");
 			out.println("        <tr>");
-			out.println("            <td style=\"font-size: x-large\">Email:</td>");
+			out.println("            <td style=\"font-size: x-large\">First Name:</td>");
 			out.println("            <td>");
-			out.println("                <input type=\"text\" name=\"email\"");
-			out.println("                />");
-			out.println("            <td>");
+			out.println("                <input type=\"text\" name=\"first\"");
+	        if (form != null && form.getEmail() != null) {
+	        	out.println("                    value=\""+form.getEmail()+"\"");
+	        }
+	        out.println("                />");
 			out.println("        </tr>");
 			out.println("        <tr>");
 			out.println("            <td style=\"font-size: x-large\">Password:</td>");
