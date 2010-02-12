@@ -110,7 +110,6 @@ public class Bookmark extends HttpServlet {
 			} 
 			
 			else if(form.getButton().equals("Login")) {
-				user = userDAO.lookup(form.getEmail());
 
 				errors.addAll(form.getLoginErrors());
 				if (errors.size() != 0) {
@@ -118,6 +117,7 @@ public class Bookmark extends HttpServlet {
 					return;
 				}
 				
+				user = userDAO.lookup(form.getEmail());
 				if (user == null) {
 					errors.add("No such user");
 					outputLoginPage(response,form,errors, loggedIn, registered, registering, null, null);
@@ -132,6 +132,14 @@ public class Bookmark extends HttpServlet {
 			}
 			
 			else { //Complete
+				
+				user = userDAO.lookup(form.getEmail());
+				if (user != null) {
+					errors.add("User already exists, somebody must have created it before you");
+					outputLoginPage(response,form,errors, loggedIn, registered, true, null, form.getSecret());
+					return;
+				}
+				
 				errors.addAll(form.getCompleteErrors());
 				if(errors.size() > 0){
 					outputLoginPage(response,form,errors, loggedIn, registered, true, null, form.getSecret());
