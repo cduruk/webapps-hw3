@@ -19,7 +19,7 @@
         </init-param>
         <init-param>
         	<param-name>  jdbcURL                </param-name> 
-	    	<param-value> jdbc:mysql:///test     </param-value>
+	    	<param-value> jdbc:mysql:///webapp     </param-value>
         </init-param>
     </servlet>
 
