@@ -1,3 +1,17 @@
+/*
+ * Can Duruk (cduruk@)
+ * Thu Feb 11 22:45:49 EST 2010
+ * 15437 - Web Application Development
+ * 
+ * Heavily inspired by Jeff Eppinger's ToDoList3 app
+ * 
+ * You may use, modify and share this code for non-commercial purposes
+ * as long a you comply with this license from Creative Commons:
+ * Summary of license: http://creativecommons.org/licenses/by-nc-sa/3.0
+ * Full Text of License: http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode
+ * 
+ */
+
 package edu.cmu.cs.webapp.hw3.dao;
 
 import org.mybeans.dao.DAOException;

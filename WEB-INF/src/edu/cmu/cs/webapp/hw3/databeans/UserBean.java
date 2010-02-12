@@ -1,12 +1,15 @@
 /*
- * Copyright (c) 2005-2009 Jeffrey L. Eppinger.  All Rights Reserved.
- *     You may use, modify and share this code for non-commercial purposes
- *     as long a you comply with this license from Creative Commons:
- *     Summary of license: http://creativecommons.org/licenses/by-nc-sa/3.0
- *     Full Text of License: http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode
- *     Specifically, if you distribute your code for non-educational purposes,
- *     you must include this copyright notice in your work.
- *     If you wish to have broader rights, you must contact the copyright holder.
+ * Can Duruk (cduruk@)
+ * Thu Feb 11 22:45:49 EST 2010
+ * 15437 - Web Application Development
+ * 
+ * Heavily inspired by Jeff Eppinger's ToDoList3 app
+ * 
+ * You may use, modify and share this code for non-commercial purposes
+ * as long a you comply with this license from Creative Commons:
+ * Summary of license: http://creativecommons.org/licenses/by-nc-sa/3.0
+ * Full Text of License: http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode
+ * 
  */
 
 package edu.cmu.cs.webapp.hw3.databeans;
