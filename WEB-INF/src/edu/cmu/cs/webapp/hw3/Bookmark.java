@@ -38,7 +38,9 @@ import edu.cmu.cs.webapp.hw3.databeans.UserBean;
 import edu.cmu.cs.webapp.hw3.formbeans.BookmarkForm;
 import edu.cmu.cs.webapp.hw3.formbeans.LoginForm;
 
+@SuppressWarnings("serial")
 public class Bookmark extends HttpServlet {
+	@SuppressWarnings("unused") //It is used...
 	private BookmarkDAO bookmarkDAO;
 	private UserDAO userDAO;
 
@@ -73,7 +75,6 @@ public class Bookmark extends HttpServlet {
 			} catch (DAOException e) {
 				e.printStackTrace();
 			} catch (RollbackException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
