@@ -361,7 +361,8 @@ public class Bookmark extends HttpServlet {
 
 		out.println("<body>");
 		out.println("<h2>Bookmark Manager</h2>");
-
+		out.println("<h3>Bookmarks for " + user.getFirstName() +" " +user.getLastName()+"</h3>");
+		
 		// Generate an HTML <form> to get data from the user
 		out.println("<form method=\"POST\">");
 		out.println("    <table>");
