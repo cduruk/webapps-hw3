@@ -33,18 +33,6 @@ public class LoginForm extends FormBean{
 	
     public void setPassword(String s)  { password = s.trim(); }
     public void setButton(String s)    { button = s.trim(); }
-
-    public List<String> getValidationErrors() {
-        List<String> errors = new ArrayList<String>();
-
-        if (secret == null && (password == null || password.length() == 0)) errors.add("Password is required");
-        if (button == null) errors.add("Button is required");
-        if (!button.equals("Login") && !button.equals("Register") && !button.equals("Complete")) errors.add("Invalid button");
-        
-        if (errors.size() > 0) return errors;
-		
-        return errors;
-    }
     
     public List<String> getCompleteErrors(){
     	List<String> errors = new ArrayList<String>();
